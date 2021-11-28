@@ -42,7 +42,7 @@ public class B001Config {
                 .build();
     }
 
-    public Step step1() {
+    private Step step1() {
         return stepBuilderFactory.get("step1")
                 .tasklet(tasklet)
                 .build();
