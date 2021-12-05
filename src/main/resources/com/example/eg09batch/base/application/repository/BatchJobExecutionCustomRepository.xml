@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eg09batch.base.application.repository.BatchJobExecutionCustomRepository">
+
+  <resultMap id="BaseResultMap" type="com.example.eg09batch.base.domain.model.mbg.BatchJobExecution">
+    <id column="job_execution_id" jdbcType="BIGINT" property="jobExecutionId" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="job_instance_id" jdbcType="BIGINT" property="jobInstanceId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="exit_code" jdbcType="VARCHAR" property="exitCode" />
+    <result column="exit_message" jdbcType="VARCHAR" property="exitMessage" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+    <result column="job_configuration_location" jdbcType="VARCHAR" property="jobConfigurationLocation" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    batch_job_execution.job_execution_id,
+    batch_job_execution.version,
+    batch_job_execution.job_instance_id,
+    batch_job_execution.create_time,
+    batch_job_execution.start_time,
+    batch_job_execution.end_time,
+    batch_job_execution.status,
+    batch_job_execution.exit_code,
+    batch_job_execution.exit_message,
+    batch_job_execution.last_updated,
+    batch_job_execution.job_configuration_location
+  </sql>
+
+  <select id="selectLastSuccessByJobName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from batch_job_execution
+    inner join batch_job_instance on batch_job_instance.job_instance_id = batch_job_execution.job_instance_id
+    where
+    batch_job_instance.job_name = #{jobName, jdbcType=VARCHAR}
+      and batch_job_execution.exit_code = 'COMPLETED'
+    order by batch_job_execution.job_execution_id desc
+    limit 1
+  </select>
+
+</mapper>
