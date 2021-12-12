@@ -7,11 +7,18 @@ import org.springframework.cloud.aws.autoconfigure.cache.ElastiCacheAutoConfigur
 import org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Arrays;
+
 @EnableBatchProcessing
 @SpringBootApplication(exclude = {ElastiCacheAutoConfiguration.class, ContextInstanceDataAutoConfiguration.class}) // 非接続時のエラー回避のためAWS自動構成を無効化
 public class Eg09BatchApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(Eg09BatchApplication.class, args);
+
+        String[] a = applicationContext.getBeanDefinitionNames();
         System.exit(SpringApplication.exit(applicationContext));
     }
+
+
+
 }

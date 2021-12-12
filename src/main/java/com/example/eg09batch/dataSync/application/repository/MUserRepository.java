@@ -3,6 +3,8 @@ package com.example.eg09batch.dataSync.application.repository;
 import com.example.eg09batch.dataSync.domain.model.MUser;
 import com.example.eg09batch.dataSync.domain.model.MUserExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 public interface MUserRepository {

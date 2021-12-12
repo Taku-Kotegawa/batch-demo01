@@ -4,6 +4,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ public class BatchConfig {
      * @param sessionFactory
      * @return SqlSessionTemplate
      */
-    @Bean("batchModeSqlSessionTemplate")
+    @Bean(BATCH_SQL_SESSION_TEMPLATE_NAME)
     public SqlSessionTemplate getBatchSqlSessionTemplate(@Autowired SqlSessionFactory sessionFactory) {
         return new SqlSessionTemplate(sessionFactory, ExecutorType.BATCH);
     }
@@ -69,4 +70,9 @@ public class BatchConfig {
      * Package of MyBatis Repository
      */
     public final static String PACKAGE_REPOSITORY = "com.example.eg09batch.dataSync.application.repository";
+
+    /**
+     *
+     */
+    public final static String BATCH_SQL_SESSION_TEMPLATE_NAME = "batchModeSqlSessionTemplate";
 }

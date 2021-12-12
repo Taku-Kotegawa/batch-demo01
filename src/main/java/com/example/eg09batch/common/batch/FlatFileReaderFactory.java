@@ -2,7 +2,6 @@ package com.example.eg09batch.common.batch;
 
 
 import com.example.eg09batch.common.mapper.NullBindBeanWrapperFieldSetMapper;
-import com.example.eg09batch.config.BatchConfig;
 import com.example.eg09batch.config.FileTypeEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.batch.item.ItemStreamReader;

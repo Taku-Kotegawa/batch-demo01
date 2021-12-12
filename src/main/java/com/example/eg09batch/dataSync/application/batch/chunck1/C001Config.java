@@ -3,7 +3,6 @@ package com.example.eg09batch.dataSync.application.batch.chunck1;
 import com.example.eg09batch.base.application.service.BatchJobService;
 import com.example.eg09batch.base.domain.model.mbg.BatchJobExecution;
 import com.example.eg09batch.common.batch.FlatFileWriterFactory;
-import com.example.eg09batch.common.util.StringUtils;
 import com.example.eg09batch.dataSync.application.common.JobStartTasklet;
 import com.example.eg09batch.dataSync.domain.dto.IF001UserCsv;
 import com.example.eg09batch.dataSync.domain.model.MUser;
@@ -23,12 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import static com.example.eg09batch.config.BatchConfig.CHUNK_SIZE;
 import static com.example.eg09batch.config.FileTypeEnum.CSV;
-import static com.example.eg09batch.config.TimeConfig.TIME_STAMP_PATTERN;
 import static com.example.eg09batch.dataSync.application.batch.chunck1.C001Constants.*;
 
 /**
@@ -107,7 +104,6 @@ public class C001Config {
     }
 
     public ItemStreamWriter<IF001UserCsv> writer() {
-//        String outputFile = IF_ID + "_" + StringUtils.format(LocalDateTime.now(), TIME_STAMP_PATTERN) + ".csv";
         String outputFile = IF_ID + ".csv";
         ItemStreamWriter<IF001UserCsv> writer = new FlatFileWriterFactory<IF001UserCsv>(IF001UserCsv.COLUMNS, IF001UserCsv.HEADER)
                 .getItemStreamWriter(CSV, outputFile);
