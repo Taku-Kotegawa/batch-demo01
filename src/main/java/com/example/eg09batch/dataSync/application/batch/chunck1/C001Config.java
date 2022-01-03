@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.eg09batch.config.BatchConfig.CHUNK_SIZE;
 import static com.example.eg09batch.config.FileTypeEnum.CSV;
@@ -78,7 +79,7 @@ public class C001Config {
 
     public MyBatisCursorItemReader<MUser> reader() {
 
-        var example = new MUserExample();
+        MUserExample example = new MUserExample();
 
         //前回正常終了ジョブの実行時間を取得し、テーブルの最終更新日と比較して差分データを抽出
         BatchJobExecution batchJobExecution = batchJobService.findLastComplete(JOB_ID);
@@ -86,7 +87,7 @@ public class C001Config {
             example.or().andChangedAtGreaterThan(batchJobExecution.getStartTime());
         }
 
-        var parameterValues = new HashMap<String, Object>();
+        Map parameterValues = new HashMap<String, Object>();
         parameterValues.put("oredCriteria", example.getOredCriteria());
         parameterValues.put("orderByClause", example.getOrderByClause());
 

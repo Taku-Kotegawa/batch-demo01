@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.eg09batch.config.FileTypeEnum.CSV;
 import static com.example.eg09batch.dataSync.application.batch.b001.B001Constants.*;
@@ -117,7 +118,7 @@ public class B001Tasklet implements Tasklet {
      */
     private MyBatisCursorItemReader<MUser> makeReader(LocalDateTime lastStartTime) {
 
-        var example = new MUserExample();
+        MUserExample example = new MUserExample();
         if (lastStartTime != null) {
             // 抽出条件の指定
             example.or().andChangedAtGreaterThan(lastStartTime);
@@ -125,7 +126,7 @@ public class B001Tasklet implements Tasklet {
         // 並び順の指定
         example.setOrderByClause("uid desc");
 
-        var parameterValues = new HashMap<String, Object>();
+        Map parameterValues = new HashMap<String, Object>();
         parameterValues.put("oredCriteria", example.getOredCriteria());
         parameterValues.put("orderByClause", example.getOrderByClause());
 

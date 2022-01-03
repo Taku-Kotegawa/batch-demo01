@@ -4,6 +4,8 @@ package com.example.eg09batch.dataSync.application.common;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.StepExecution;
 
+import java.util.Iterator;
+
 public class ExecutionContextUtils {
 
     /**
@@ -14,7 +16,7 @@ public class ExecutionContextUtils {
      */
     public static Object getContext(StepContribution stepContribution, String key) {
         Object o = null;
-        var iterator = stepContribution.getStepExecution().getJobExecution().getStepExecutions().iterator();
+        Iterator<StepExecution> iterator = stepContribution.getStepExecution().getJobExecution().getStepExecutions().iterator();
         while (iterator.hasNext()) {
             StepExecution s = iterator.next();
             if (s.getExecutionContext().containsKey(key)) {

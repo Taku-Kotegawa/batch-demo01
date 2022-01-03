@@ -46,15 +46,15 @@ public class FlatFileReaderFactory<T> {
      */
     public FlatFileItemReader<T> csvReader(String inputFile) {
 
-        var delimitedLineTokenizer = new DelimitedLineTokenizer();
+        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
         delimitedLineTokenizer.setDelimiter(CSV_DELIMITER);
         delimitedLineTokenizer.setQuoteCharacter(CSV_ENCLOSURE);
         delimitedLineTokenizer.setNames(columns);
 
-        var nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
+        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
         nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
 
-        var defaultLineMapper = new DefaultLineMapper<T>();
+        DefaultLineMapper defaultLineMapper = new DefaultLineMapper<T>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
         defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
 
@@ -77,14 +77,14 @@ public class FlatFileReaderFactory<T> {
      */
     public FlatFileItemReader<T> tsvReader(String inputFile) {
 
-        var delimitedLineTokenizer = new DelimitedLineTokenizer();
+        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
         delimitedLineTokenizer.setDelimiter(TSV_DELIMITER);
         delimitedLineTokenizer.setNames(columns);
 
-        var nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
+        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
         nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
 
-        var defaultLineMapper = new DefaultLineMapper<T>();
+        DefaultLineMapper defaultLineMapper = new DefaultLineMapper<T>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
         defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
 

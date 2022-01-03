@@ -7,6 +7,8 @@ import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.terasoluna.batch.item.file.transform.EnclosableDelimitedLineAggregator;
 
@@ -45,11 +47,11 @@ public class FlatFileWriterFactory<T> {
      */
     public FlatFileItemWriter<T> csvWriter(String outputFile) {
 
-        var beanWrapperFieldExtractor = new BeanWrapperFieldExtractor();
+        BeanWrapperFieldExtractor beanWrapperFieldExtractor = new BeanWrapperFieldExtractor();
         beanWrapperFieldExtractor.setNames(columns);
         beanWrapperFieldExtractor.afterPropertiesSet();
 
-        var delimitedLineAggregator = new EnclosableDelimitedLineAggregator();
+        EnclosableDelimitedLineAggregator delimitedLineAggregator = new EnclosableDelimitedLineAggregator();
         delimitedLineAggregator.setDelimiter(CSV_DELIMITER_CHAR);
         delimitedLineAggregator.setEnclosure(CSV_ENCLOSURE);
         delimitedLineAggregator.setAllEnclosing(CSV_ALL_ENCLOSURE);
@@ -71,11 +73,11 @@ public class FlatFileWriterFactory<T> {
 
     public FlatFileItemWriter<T> tsvWriter(String outputFile) {
 
-        var beanWrapperFieldExtractor = new BeanWrapperFieldExtractor();
+        BeanWrapperFieldExtractor beanWrapperFieldExtractor = new BeanWrapperFieldExtractor();
         beanWrapperFieldExtractor.setNames(columns);
         beanWrapperFieldExtractor.afterPropertiesSet();
 
-        var delimitedLineAggregator = new DelimitedLineAggregator();
+        DelimitedLineAggregator delimitedLineAggregator = new DelimitedLineAggregator();
         delimitedLineAggregator.setDelimiter(TSV_DELIMITER);
         delimitedLineAggregator.setFieldExtractor(beanWrapperFieldExtractor);
 

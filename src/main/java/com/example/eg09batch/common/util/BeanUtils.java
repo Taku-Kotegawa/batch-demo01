@@ -17,25 +17,33 @@ public class BeanUtils {
 
     private static final String SEPARATOR = "_";
 
-    private static final Set<String> PRIMITIVE_SET = Set.of(
-            "java.lang.String",
-            "java.lang.Integer",
-            "java.lang.Long",
-            "java.lang.Float",
-            "java.lang.Double",
-            "java.lang.BigDecimal",
-            "java.time.LocalDate",
-            "java.time.LocalDateTime",
-            "java.util.Date",
-            "java.lang.Enum"
-    );
+    private static final Set<String> PRIMITIVE_SET = new HashSet<String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            add("java.lang.String");
+            add("java.lang.Integer");
+            add("java.lang.Long");
+            add("java.lang.Float");
+            add("java.lang.Double");
+            add("java.lang.BigDecimal");
+            add("java.time.LocalDate");
+            add("java.time.LocalDateTime");
+            add("java.util.Date");
+            add("java.lang.Enum");
+        }
+    };
 
-    private static final Set<String> COLLECTION_SET = Set.of(
-            "java.util.Map",
-            "java.util.List",
-            "java.util.Set",
-            "java.util.Collection"
-    );
+
+    private static final Set<String> COLLECTION_SET = new HashSet<String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            add("java.util.Map");
+            add("java.util.List");
+            add("java.util.Set");
+            add("java.util.Collection");
+        }
+    };
 
     // インスタンス化禁止
     private BeanUtils() {

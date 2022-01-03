@@ -70,7 +70,10 @@ public class StringUtils {
      * @return 文字列に変換したもの
      */
     public static String nvl(String s) {
-        return Objects.requireNonNullElse(s, "");
+        if (s == null) {
+            return "";
+        }
+        return s;
     }
 
     /**

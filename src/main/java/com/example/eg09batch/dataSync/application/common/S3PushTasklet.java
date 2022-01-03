@@ -39,13 +39,17 @@ public class S3PushTasklet implements Tasklet {
         // 前のステップから値を取り出す
         String outputFile = (String) ExecutionContextUtils.getContext(stepContribution, "outputFile");
 
+        if (outputFile == null) {
+            outputFile = "test.csv";
+        }
+
         String currentTime = StringUtils.format(LocalDateTime.now(), "yyyymmddhhmmss");
-        String objectKey = directory + "/" + outputFile.replace(".", "_" + currentTime + ".");
+        String objectKey = outputFile.replace(".", "_" + currentTime + ".");
         String s3Location = "s3://" + bucketname + "/" + objectKey;
 
         WritableResource resource = (WritableResource) resourceLoader.getResource(s3Location);
 
-        try (InputStream inputStream = new FileInputStream(outputFile); OutputStream outputStream = resource.getOutputStream()) {
+        try (InputStream inputStream = new FileInputStream(directory + "/" + outputFile); OutputStream outputStream = resource.getOutputStream()) {
             IOUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
             // omitted
