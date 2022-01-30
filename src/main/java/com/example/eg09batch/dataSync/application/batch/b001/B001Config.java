@@ -3,6 +3,7 @@ package com.example.eg09batch.dataSync.application.batch.b001;
 import com.example.eg09batch.common.batch.CustomIncrementer;
 import com.example.eg09batch.dataSync.application.common.JobStartTasklet;
 import com.example.eg09batch.dataSync.application.common.S3PushTasklet;
+import com.example.eg09batch.dataSync.application.common.WebClientTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -35,34 +36,37 @@ public class B001Config {
     @Autowired
     JobStartTasklet jobStartTasklet;
 
+//    @Autowired
+//    S3PushTasklet s3PushTasklet;
+
     @Autowired
-    S3PushTasklet s3PushTasklet;
+    WebClientTasklet webClientTasklet;
 
     @Bean(JOB_ID)
     public Job job() {
         return jobBuilderFactory.get(JOB_ID)
                 .incrementer(new CustomIncrementer())
-                .start(step1())
-                .next(step2())
-                .next(step3())
+                .start(step0())
+                .next(step1())
+//                .next(step3())
                 .build();
     }
 
-    private Step step1() {
-        return stepBuilderFactory.get("step1")
+    private Step step0() {
+        return stepBuilderFactory.get("jobStartTasklet")
                 .tasklet(jobStartTasklet)
                 .build();
     }
 
-    private Step step2() {
-        return stepBuilderFactory.get("step2")
-                .tasklet(tasklet)
+    private Step step1() {
+        return stepBuilderFactory.get("webClientTasklet")
+                .tasklet(webClientTasklet)
                 .build();
     }
 
-    private Step step3() {
-        return stepBuilderFactory.get("step3")
-                .tasklet(s3PushTasklet)
-                .build();
-    }
+//    private Step step2() {
+//        return stepBuilderFactory.get("s3PushTasklet")
+//                .tasklet(s3PushTasklet)
+//                .build();
+//    }
 }
