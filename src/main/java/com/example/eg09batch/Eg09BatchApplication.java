@@ -14,8 +14,6 @@ import java.util.Arrays;
 public class Eg09BatchApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(Eg09BatchApplication.class, args);
-
-        String[] a = applicationContext.getBeanDefinitionNames();
         System.exit(SpringApplication.exit(applicationContext));
     }
 

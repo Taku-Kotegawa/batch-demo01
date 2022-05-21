@@ -32,16 +32,18 @@ public class WebClientTasklet implements Tasklet {
 
         String address_content = "CSVの中身";
 
-        String body = client.post()
-                .uri("/abook/{address_book_id}/import", ADDRESS_BOOK_ID)
-                .header("key", "value") //追加パラメータを設定
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(address_content)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+//        String body = client.post()
+//                .uri("/abook/{address_book_id}/import", ADDRESS_BOOK_ID)
+//                .header("key", "value") //追加パラメータを設定
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(address_content)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .block();
+//
+//        log.info(body);
 
-        log.info(body);
+        log.info(address_content);
 
         return RepeatStatus.FINISHED;
     }

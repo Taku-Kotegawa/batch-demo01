@@ -9,12 +9,13 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.example.eg09batch.dataSync.application.batch.b003.B003Constants.JOB_ID;
 
-
+@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = "b003")
 @Configuration
 public class B003Config {
 

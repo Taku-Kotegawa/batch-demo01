@@ -8,12 +8,14 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.example.eg09batch.dataSync.application.batch.b002.B002Constants.JOB_ID;
 import static com.example.eg09batch.dataSync.application.batch.b002.B002Constants.TASKLET_NAME;
 
+@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = "b002")
 @Configuration
 public class B002Config {
 

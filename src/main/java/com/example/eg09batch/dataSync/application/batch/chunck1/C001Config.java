@@ -19,6 +19,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +33,7 @@ import static com.example.eg09batch.dataSync.application.batch.chunck1.C001Const
 /**
  * チュンクモードの送信(DB->File)
  */
+@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = "c001")
 @Configuration
 public class C001Config {
 
