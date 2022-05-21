@@ -19,6 +19,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemStreamWriter;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -84,7 +85,7 @@ public class B001Tasklet implements Tasklet {
         MUser item = null;
         List<IF001UserCsv> items = new ArrayList<>(CHUNK_SIZE);
         ItemStreamReader<MUser> reader = makeReader(fromTime);
-        ItemStreamWriter<IF001UserCsv> writer = makeWriter(outputFile);
+        FlatFileItemWriter<IF001UserCsv> writer = makeWriter(outputFile);
         try {
             reader.open(chunkContext.getStepContext().getStepExecution().getExecutionContext());
             writer.open(chunkContext.getStepContext().getStepExecution().getExecutionContext());
@@ -94,6 +95,7 @@ public class B001Tasklet implements Tasklet {
 
                 if (items.size() == CHUNK_SIZE) {
                     writer.write(items);
+                    writer.doWrite(items);
                     items.clear();
                     log.info(format(MSG_OUTPUT_RECORD_NUM, count));
                 }
@@ -141,9 +143,9 @@ public class B001Tasklet implements Tasklet {
     /**
      * @return
      */
-    private ItemStreamWriter<IF001UserCsv> makeWriter(String outputFile) {
-        ItemStreamWriter<IF001UserCsv> writer = new FlatFileWriterFactory<IF001UserCsv>(IF001UserCsv.COLUMNS, IF001UserCsv.HEADER)
-                .getItemStreamWriter(CSV, outputFile);
+    private FlatFileItemWriter<IF001UserCsv> makeWriter(String outputFile) {
+        FlatFileItemWriter<IF001UserCsv> writer = new FlatFileWriterFactory<IF001UserCsv>(IF001UserCsv.COLUMNS, IF001UserCsv.HEADER)
+                .csvWriter(outputFile);
         return writer;
     }
 
