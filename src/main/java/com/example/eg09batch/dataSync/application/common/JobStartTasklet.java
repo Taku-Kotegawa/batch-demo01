@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 public class JobStartTasklet implements Tasklet {
+
+    public JobStartTasklet() {
+        log.debug("**** 初期化しました。*****");
+    }
+
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
         log.info("ジョブを開始します。");
@@ -22,7 +27,7 @@ public class JobStartTasklet implements Tasklet {
 
 //        stepContribution.setExitStatus(ExitStatus.COMPLETED);
 //        stepContribution.setExitStatus(ExitStatus.FAILED);
-        stepContribution.setExitStatus(ExitStatus.STOPPED);
+//        stepContribution.setExitStatus(ExitStatus.STOPPED);
 
         return RepeatStatus.FINISHED;
     }

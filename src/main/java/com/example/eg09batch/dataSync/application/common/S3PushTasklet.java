@@ -9,6 +9,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
+
+@Lazy
 @Slf4j
 @Component
 public class S3PushTasklet implements Tasklet {
+
+    public S3PushTasklet() {
+        log.debug("**** 初期化しました。*****");
+    }
 
     @Autowired
     ResourceLoader resourceLoader;

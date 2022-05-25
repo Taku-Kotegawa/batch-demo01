@@ -34,7 +34,7 @@ public class B002Config {
      *
      * @return
      */
-    @Bean(JOB_ID)
+    @Bean
     public Job job() {
         return jobBuilderFactory.get(JOB_ID)
                 .incrementer(new RunIdIncrementer())
@@ -43,7 +43,8 @@ public class B002Config {
                 .build();
     }
 
-    private Step step1() {
+    @Bean
+    Step step1() {
         return stepBuilderFactory.get("step1")
                 .tasklet(tasklet)
                 .build();

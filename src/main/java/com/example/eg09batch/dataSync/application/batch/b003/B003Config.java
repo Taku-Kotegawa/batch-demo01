@@ -39,7 +39,7 @@ public class B003Config {
     S3PullDeleteTasklet s3PullDeleteTasklet;
 
 
-    @Bean(JOB_ID)
+    @Bean
     public Job job() {
         return jobBuilderFactory.get(JOB_ID)
                 .incrementer(new CustomIncrementer())

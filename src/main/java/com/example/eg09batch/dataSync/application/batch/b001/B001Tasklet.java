@@ -22,6 +22,7 @@ import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +40,14 @@ import static java.lang.String.format;
 // @See https://macchinetta.github.io/batch-guideline/current/ja/single_index.html#Ch05_DBAccess_HowToUse_Input_MyBatisItemReader
 // @See https://macchinetta.github.io/batch-guideline/current/ja/single_index.html#Ch09_Impl_FileAccessJob_Tasklet_Logic
 
+@Lazy
 @Slf4j
 @Component(TASKLET_NAME)
 public class B001Tasklet implements Tasklet {
+
+    public B001Tasklet() {
+        log.debug("**** 初期化しました。*****");
+    }
 
     @Autowired
     SqlSessionFactory sqlSessionFactory;

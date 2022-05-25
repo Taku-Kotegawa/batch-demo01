@@ -14,6 +14,7 @@ public class PrintOutTasklet implements Tasklet {
     private String message;
 
     public PrintOutTasklet(String message) {
+        log.debug("**** 初期化しました。*****");
         this.message = message;
     }
 
