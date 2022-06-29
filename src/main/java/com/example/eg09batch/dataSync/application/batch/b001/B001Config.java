@@ -54,7 +54,7 @@ public class B001Config {
     WebClientTasklet webClientTasklet;
 
     @Bean
-    public Job b001(Step step0, Step step1, Step step2, Step step3, Step step4) {
+    public Job job(Step step0, Step step1, Step step2, Step step3, Step step4) {
 
         Flow flow1 = new FlowBuilder<SimpleFlow>("flow1")
                 .start(step2)
