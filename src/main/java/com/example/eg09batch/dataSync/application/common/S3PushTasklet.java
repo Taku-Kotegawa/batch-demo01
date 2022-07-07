@@ -1,6 +1,6 @@
 package com.example.eg09batch.dataSync.application.common;
 
-import com.amazonaws.util.IOUtils;
+//import com.amazonaws.util.IOUtils;
 import com.example.eg09batch.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -59,7 +59,7 @@ public class S3PushTasklet implements Tasklet {
         WritableResource resource = (WritableResource) resourceLoader.getResource(s3Location);
 
         try (InputStream inputStream = new FileInputStream(directory + "/" + outputFile); OutputStream outputStream = resource.getOutputStream()) {
-            IOUtils.copy(inputStream, outputStream);
+//            IOUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
             // omitted
         }

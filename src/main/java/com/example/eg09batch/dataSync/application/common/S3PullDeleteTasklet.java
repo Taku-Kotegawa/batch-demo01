@@ -1,7 +1,7 @@
 package com.example.eg09batch.dataSync.application.common;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.util.IOUtils;
+//import com.amazonaws.services.s3.AmazonS3;
+//import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -10,7 +10,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.aws.core.io.s3.PathMatchingSimpleStorageResourcePatternResolver;
+//import org.springframework.cloud.aws.core.io.s3.PathMatchingSimpleStorageResourcePatternResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
@@ -31,16 +31,16 @@ public class S3PullDeleteTasklet implements Tasklet {
 
     private ResourcePatternResolver resourcePatternResolver;
 
-    private AmazonS3 amazonS3;
+//    private AmazonS3 amazonS3;
 
     @Value("${dataSync.s3.bucketname}")
     private String bucketname;
 
-    @Autowired
-    public void setupResolver(ApplicationContext applicationContext, AmazonS3 amazonS3) {
-        this.amazonS3 = amazonS3;
-        this.resourcePatternResolver = new PathMatchingSimpleStorageResourcePatternResolver(amazonS3, applicationContext);
-    }
+//    @Autowired
+//    public void setupResolver(ApplicationContext applicationContext, AmazonS3 amazonS3) {
+//        this.amazonS3 = amazonS3;
+//        this.resourcePatternResolver = new PathMatchingSimpleStorageResourcePatternResolver(amazonS3, applicationContext);
+//    }
 
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
@@ -53,10 +53,10 @@ public class S3PullDeleteTasklet implements Tasklet {
             try (InputStream inputStream = resource.getInputStream();
                  OutputStream outputStream = new FileOutputStream("c:/users/user/download/" + resource.getFilename())) {
 
-                IOUtils.copy(inputStream, outputStream);
+//                IOUtils.copy(inputStream, outputStream);
                 log.info("Copy s3://" + bucketname + "/" + resource.getFilename() + " to " + "c:/users/user/download/" + resource.getFilename());
 
-                amazonS3.deleteObject(bucketname, resource.getFilename());
+//                amazonS3.deleteObject(bucketname, resource.getFilename());
                 log.info("Delete s3://" + bucketname + "/" + resource.getFilename());
 
             } catch (IOException e) {

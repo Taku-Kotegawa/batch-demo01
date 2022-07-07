@@ -1,10 +1,7 @@
 package com.example.eg09batch.dataSync.application.batch.b001;
 
 import com.example.eg09batch.common.batch.CustomIncrementer;
-import com.example.eg09batch.dataSync.application.common.JobStartTasklet;
-import com.example.eg09batch.dataSync.application.common.PrintOutTasklet;
-import com.example.eg09batch.dataSync.application.common.S3PushTasklet;
-import com.example.eg09batch.dataSync.application.common.WebClientTasklet;
+import com.example.eg09batch.dataSync.application.common.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -51,6 +48,9 @@ public class B001Config {
     S3PushTasklet s3PushTasklet;
 
     @Autowired
+    S3ListTasklet s3ListTasklet;
+
+    @Autowired
     WebClientTasklet webClientTasklet;
 
     @Bean
@@ -60,7 +60,7 @@ public class B001Config {
                 .start(step2)
                 .next(step3)
                 .next(step4)
-//                .next(step5())
+                .next(step5())
                 .build();
 
         return jobBuilderFactory.get(JOB_ID)
@@ -109,14 +109,9 @@ public class B001Config {
     @Bean
     Step step5() {
         return stepBuilderFactory.get("step5")
-                .tasklet(tasklet)
+//                .tasklet(tasklet)
+                .tasklet(s3ListTasklet)
                 .build();
     }
 
-
-//    private Step step2() {
-//        return stepBuilderFactory.get("s3PushTasklet")
-//                .tasklet(s3PushTasklet)
-//                .build();
-//    }
 }
