@@ -2,9 +2,11 @@ package com.example.eg09batch.common.util;
 
 import com.google.common.base.CaseFormat;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 文字列操作のユーティリティ

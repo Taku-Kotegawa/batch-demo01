@@ -10,10 +10,10 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
-import software.amazon.awssdk.transfer.s3.FileDownload;
-import software.amazon.awssdk.transfer.s3.S3TransferManager;
+import software.amazon.awssdk.transfer.s3.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Lazy
@@ -51,6 +52,33 @@ public class S3ListTasklet implements Tasklet {
     }
 
     /**
+     * S3にファイルをアップロードする。
+     *
+     * @param s3Client   S3Clinet
+     * @param bucketName バケット名
+     * @param objectKey  ファイル名
+     * @param localPath  ローカルファイル名(フルパス)
+     * @param metadata   S3オブジェクトにセットするメタデータ
+     */
+    public void putS3Object(S3Client s3Client, String bucketName, String objectKey, String localPath, Map<String, String> metadata) {
+
+        LocalDateTime startDateTime = LocalDateTime.now();
+        log.info("Upload Start {} to S3://{}/{}", localPath, bucketName, objectKey);
+
+        PutObjectRequest putOb = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .metadata(metadata)
+                .build();
+
+        PutObjectResponse response = s3Client.putObject(putOb, new File(localPath).toPath());
+
+        Duration duration = Duration.between(startDateTime, LocalDateTime.now());
+        log.info("Upload End, Elapsed Time: {}", formatDuration(duration));
+    }
+
+
+    /**
      * S3オブジェクトをコピーする
      *
      * @param s3Client          S3Client
@@ -70,7 +98,7 @@ public class S3ListTasklet implements Tasklet {
                 .build();
 
         s3Client.copyObject(copyObjectRequest);
-        log.info("Copy S3://{}/{} to S3://{}/{}.", sourceBucket, sourceKey, destinationBucket, destinationKey);
+        log.info("Copy S3://{}/{} to S3://{}/{}", sourceBucket, sourceKey, destinationBucket, destinationKey);
 
     }
 
@@ -92,7 +120,7 @@ public class S3ListTasklet implements Tasklet {
                 .build();
 
         s3Client.deleteObjects(dor);
-        log.info("Delete S3://{}/{}.", bucketName, objectKey);
+        log.info("Delete S3://{}/{}", bucketName, objectKey);
 
     }
 
@@ -132,7 +160,7 @@ public class S3ListTasklet implements Tasklet {
      */
     private void getObjectToFile(S3Client s3Client, String bucketName, String objectKey, String localPath) {
         LocalDateTime startDateTime = LocalDateTime.now();
-        log.info("Download Start S3://{}/{} to {}.", bucketName, objectKey, localPath);
+        log.info("Download Start S3://{}/{} to {}", bucketName, objectKey, localPath);
 
         GetObjectRequest objectRequest = GetObjectRequest
                 .builder()
@@ -145,7 +173,7 @@ public class S3ListTasklet implements Tasklet {
         downloadingFile.renameTo(new File(localPath));
 
         Duration duration = Duration.between(startDateTime, LocalDateTime.now());
-        log.info("Download End. Elapsed Time: {}", formatDuration(duration));
+        log.info("Download End, Elapsed Time: {}", formatDuration(duration));
 
     }
 
@@ -159,7 +187,7 @@ public class S3ListTasklet implements Tasklet {
      */
     private void downloadObjectTM(S3TransferManager s3TransferManager, String bucketName, String objectKey, String localPath) {
         LocalDateTime startDateTime = LocalDateTime.now();
-        log.info("Download Start S3://{}/{} to {}.", bucketName, objectKey, localPath);
+        log.info("Download Start S3://{}/{} to {}", bucketName, objectKey, localPath);
 
         File downloadingFile = new File(getDownloadingFilePath(localPath));
 
@@ -170,7 +198,25 @@ public class S3ListTasklet implements Tasklet {
         downloadingFile.renameTo(new File(localPath));
 
         Duration duration = Duration.between(startDateTime, LocalDateTime.now());
-        log.info("Download End. Time: {}", formatDuration(duration));
+        log.info("Download End, Time: {}, ETag: {}", formatDuration(duration));
+    }
+
+    private void uploadObjectTM(S3TransferManager s3TransferManager, String bucketName, String objectKey, String localPath) {
+
+        UploadRequest uploadRequest = UploadRequest.builder()
+                .putObjectRequest(PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(objectKey)
+                        .build())
+                .requestBody(AsyncRequestBody.fromFile(Paths.get(localPath)))
+                .build();
+
+        Upload upload = s3TransferManager.upload(uploadRequest);
+
+        CompletedUpload completedUpload = upload.completionFuture().join();
+
+        log.info(completedUpload.response().eTag());
+
     }
 
     @Override
@@ -286,13 +332,15 @@ public class S3ListTasklet implements Tasklet {
                 .forEachOrdered(
                         s3Object -> {
                             log.info("{} | {}", s3Object.key(), getFileName(s3Object.key()));
-                            moveObject(s3Client, bucketName, s3Object.key(), bucketName, getArchiveKey(s3Object.key()));
+//                            moveObject(s3Client, bucketName, s3Object.key(), bucketName, getArchiveKey(s3Object.key()));
                         }
                 );
 
         // アップロード
-
-
+        log.info("--- Upload File ---");
+        final String filePath = "/home/taku/Downloads/progit.pdf";
+//        putS3Object(s3Client, bucketName, getFileName(filePath), filePath, null);
+        uploadObjectTM(s3TransferManager, bucketName, getFileName(filePath), filePath);
 
         return RepeatStatus.FINISHED;
     }

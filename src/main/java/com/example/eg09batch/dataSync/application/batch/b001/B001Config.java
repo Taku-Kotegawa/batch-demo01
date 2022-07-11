@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 import static com.example.eg09batch.dataSync.application.batch.b001.B001Constants.JOB_ID;
 import static com.example.eg09batch.dataSync.application.batch.b001.B001Constants.TASKLET_NAME;
@@ -48,7 +47,7 @@ public class B001Config {
     S3PushTasklet s3PushTasklet;
 
     @Autowired
-    S3ListTasklet s3ListTasklet;
+    S3TestTasklet s3TestTasklet;
 
     @Autowired
     WebClientTasklet webClientTasklet;
@@ -110,7 +109,7 @@ public class B001Config {
     Step step5() {
         return stepBuilderFactory.get("step5")
 //                .tasklet(tasklet)
-                .tasklet(s3ListTasklet)
+                .tasklet(s3TestTasklet)
                 .build();
     }
 
