@@ -51,11 +51,12 @@ public class FlatFileWriterFactory<T> {
         beanWrapperFieldExtractor.setNames(columns);
         beanWrapperFieldExtractor.afterPropertiesSet();
 
-        EnclosableDelimitedLineAggregator delimitedLineAggregator = new EnclosableDelimitedLineAggregator();
+        EnclosableDelimitedLineAggregator delimitedLineAggregator = new CustomEnclosableDelimitedLineAggregator();
         delimitedLineAggregator.setDelimiter(CSV_DELIMITER_CHAR);
         delimitedLineAggregator.setEnclosure(CSV_ENCLOSURE);
         delimitedLineAggregator.setAllEnclosing(CSV_ALL_ENCLOSURE);
         delimitedLineAggregator.setFieldExtractor(beanWrapperFieldExtractor);
+        delimitedLineAggregator.afterPropertiesSet();
 
         return new FlatFileItemWriterBuilder<T>()
                 .name(WRITER_NAME)

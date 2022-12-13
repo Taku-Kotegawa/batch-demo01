@@ -53,13 +53,13 @@ public class B001Config {
     WebClientTasklet webClientTasklet;
 
     @Bean
-    public Job job(Step step0, Step step1, Step step2, Step step3, Step step4) {
+    public Job job(Step step0, Step step1, Step step2, Step step3, Step step4, Step step5) {
 
         Flow flow1 = new FlowBuilder<SimpleFlow>("flow1")
                 .start(step2)
                 .next(step3)
                 .next(step4)
-                .next(step5())
+                .next(step5)
                 .build();
 
         return jobBuilderFactory.get(JOB_ID)
@@ -108,8 +108,8 @@ public class B001Config {
     @Bean
     Step step5() {
         return stepBuilderFactory.get("step5")
-//                .tasklet(tasklet)
-                .tasklet(s3TestTasklet)
+                .tasklet(tasklet)
+//                .tasklet(s3TestTasklet)
                 .build();
     }
 
