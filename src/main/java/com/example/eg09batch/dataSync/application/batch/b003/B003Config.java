@@ -39,12 +39,17 @@ public class B003Config {
     S3PullDeleteTasklet s3PullDeleteTasklet;
 
 
+    @Autowired
+    B003Tasklet b003Tasklet;
+
+
     @Bean
     public Job job() {
         return jobBuilderFactory.get(JOB_ID)
                 .incrementer(new CustomIncrementer())
-                .start(step1())
-                .next(step2())
+//                .start(step1())
+//                .next(step2())
+                .start(step3())
                 .build();
     }
 
@@ -59,5 +64,12 @@ public class B003Config {
                 .tasklet(s3PullDeleteTasklet)
                 .build();
     }
+
+    private Step step3() {
+        return stepBuilderFactory.get("b003Tasklet")
+                .tasklet(b003Tasklet)
+                .build();
+    }
+
 
 }

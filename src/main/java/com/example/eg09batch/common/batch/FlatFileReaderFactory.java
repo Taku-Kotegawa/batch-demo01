@@ -3,10 +3,12 @@ package com.example.eg09batch.common.batch;
 
 import com.example.eg09batch.common.mapper.NullBindBeanWrapperFieldSetMapper;
 import com.example.eg09batch.config.FileTypeEnum;
+import com.example.eg09batch.dataSync.domain.dto.IF001UserCsv;
 import lombok.AllArgsConstructor;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.core.io.FileSystemResource;
@@ -46,17 +48,23 @@ public class FlatFileReaderFactory<T> {
      */
     public FlatFileItemReader<T> csvReader(String inputFile) {
 
-        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
+        DelimitedLineTokenizer delimitedLineTokenizer = new CustomDelimitedLineTokenizer();
         delimitedLineTokenizer.setDelimiter(CSV_DELIMITER);
         delimitedLineTokenizer.setQuoteCharacter(CSV_ENCLOSURE);
         delimitedLineTokenizer.setNames(columns);
 
-        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
-        nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
 
         DefaultLineMapper defaultLineMapper = new DefaultLineMapper<T>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
-        defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
+
+//        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
+//        nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
+//        defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
+        BeanWrapperFieldSetMapper beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper();
+        beanWrapperFieldSetMapper.setTargetType(clazz);
+        defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+
+
 
         return new FlatFileItemReaderBuilder<T>()
                 .name("flatFileItemReader")
