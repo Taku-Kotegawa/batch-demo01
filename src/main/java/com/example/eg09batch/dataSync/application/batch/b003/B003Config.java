@@ -1,6 +1,7 @@
 package com.example.eg09batch.dataSync.application.batch.b003;
 
 import com.example.eg09batch.common.batch.CustomIncrementer;
+import com.example.eg09batch.common.batch.CustomUuidIncrementer;
 import com.example.eg09batch.dataSync.application.common.JobStartTasklet;
 import com.example.eg09batch.dataSync.application.common.S3PullDeleteTasklet;
 import com.example.eg09batch.dataSync.application.common.S3PushTasklet;
@@ -46,7 +47,7 @@ public class B003Config {
     @Bean
     public Job job() {
         return jobBuilderFactory.get(JOB_ID)
-                .incrementer(new CustomIncrementer())
+                .incrementer(new CustomUuidIncrementer())
 //                .start(step1())
 //                .next(step2())
                 .start(step3())

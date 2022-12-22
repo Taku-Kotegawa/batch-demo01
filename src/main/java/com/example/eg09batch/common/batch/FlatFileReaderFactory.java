@@ -3,15 +3,21 @@ package com.example.eg09batch.common.batch;
 
 import com.example.eg09batch.common.mapper.NullBindBeanWrapperFieldSetMapper;
 import com.example.eg09batch.config.FileTypeEnum;
-import com.example.eg09batch.dataSync.domain.dto.IF001UserCsv;
 import lombok.AllArgsConstructor;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.core.io.FileSystemResource;
+
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 
 import static com.example.eg09batch.config.BatchConfig.*;
 import static com.example.eg09batch.config.FileTypeEnum.CSV;
@@ -20,6 +26,9 @@ import static com.example.eg09batch.config.FileTypeEnum.CSV;
 @AllArgsConstructor
 public class FlatFileReaderFactory<T> {
 
+    static final private String DATE_FORMAT = "yyyy/MM/dd";
+    static final private String DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
+    static final private String DATETIME2_FORMAT = "yyyy/MM/dd HH:mm:ss.SSS";
     private final String[] columns;
     private final Class<T> clazz;
 
@@ -53,18 +62,39 @@ public class FlatFileReaderFactory<T> {
         delimitedLineTokenizer.setQuoteCharacter(CSV_ENCLOSURE);
         delimitedLineTokenizer.setNames(columns);
 
+        // LocalDate/LocalDateTimeの変換
+        HashMap<Class, PropertyEditor> customEditors = new HashMap<>();
+        customEditors.put(LocalDateTime.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                try {
+                    setValue(LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
+                } catch (DateTimeParseException ex) {
+                    setValue(LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DATETIME2_FORMAT)));
+                }
+            }
+        });
+        customEditors.put(LocalDate.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(LocalDate.parse(text, DateTimeFormatter.ofPattern(DATE_FORMAT)));
+            }
+        });
 
         DefaultLineMapper defaultLineMapper = new DefaultLineMapper<T>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
 
-//        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
-//        nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
-//        defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
-        BeanWrapperFieldSetMapper beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper();
-        beanWrapperFieldSetMapper.setTargetType(clazz);
-        defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+        // CSVのクランをnullで解釈
+        NullBindBeanWrapperFieldSetMapper nullBindBeanWrapperFieldSetMapper = new NullBindBeanWrapperFieldSetMapper();
+        nullBindBeanWrapperFieldSetMapper.setTargetType(clazz);
+        nullBindBeanWrapperFieldSetMapper.setCustomEditors(customEditors);
+        defaultLineMapper.setFieldSetMapper(nullBindBeanWrapperFieldSetMapper);
 
-
+//        // CSVの空欄を空文字列で解釈
+//        BeanWrapperFieldSetMapper beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper();
+//        beanWrapperFieldSetMapper.setTargetType(clazz);
+//        beanWrapperFieldSetMapper.setCustomEditors(customEditors);
+//        defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
 
         return new FlatFileItemReaderBuilder<T>()
                 .name("flatFileItemReader")

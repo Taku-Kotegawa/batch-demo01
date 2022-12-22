@@ -2,6 +2,9 @@ package com.example.eg09batch.dataSync.domain.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 /**
  * CSVファイルレイアウトDTO(Fieldの型はString)
@@ -17,9 +20,8 @@ public class IF001UserCsv {
     private String pass;
     private String mail;
     private String status;
-    private String createdAt;
-    private String changedAt;
+    private LocalDate createdAt;
+    private LocalDateTime changedAt;
     private String comment;
-
 
 }

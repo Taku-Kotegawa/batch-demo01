@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 
-@EnableBatchProcessing
+
 @SpringBootApplication
 //@SpringBootApplication(exclude = {ElastiCacheAutoConfiguration.class, ContextInstanceDataAutoConfiguration.class}) // 非接続時のエラー回避のためAWS自動構成を無効化
 public class Eg09BatchApplication {
