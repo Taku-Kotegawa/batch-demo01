@@ -62,7 +62,7 @@ public class FlatFileReaderFactory<T> {
         delimitedLineTokenizer.setQuoteCharacter(CSV_ENCLOSURE);
         delimitedLineTokenizer.setNames(columns);
 
-        // LocalDate/LocalDateTimeの変換
+        // LocalDateTimeの変換
         HashMap<Class, PropertyEditor> customEditors = new HashMap<>();
         customEditors.put(LocalDateTime.class, new PropertyEditorSupport() {
             @Override
@@ -74,12 +74,25 @@ public class FlatFileReaderFactory<T> {
                 }
             }
         });
+
+        // LocalDateの変換
         customEditors.put(LocalDate.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
                 setValue(LocalDate.parse(text, DateTimeFormatter.ofPattern(DATE_FORMAT)));
             }
         });
+
+        // 制御文字の変換
+        customEditors.put(String.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(text
+                        .replace("\\n", "\n")
+                        .replace("\\t", "\t")); //TODO 見直し
+            }
+        });
+
 
         DefaultLineMapper defaultLineMapper = new DefaultLineMapper<T>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);

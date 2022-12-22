@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 public class CustomBatchConfigurer extends DefaultBatchConfigurer {
+
     @Autowired
     DataSource configDataSource;
 
