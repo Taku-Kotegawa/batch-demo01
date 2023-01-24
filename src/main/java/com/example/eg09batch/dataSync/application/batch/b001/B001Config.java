@@ -109,7 +109,7 @@ public class B001Config {
     Step step5() {
         return stepBuilderFactory.get("step5")
                 .tasklet(tasklet)
-//                .tasklet(s3TestTasklet)
+                .tasklet(s3TestTasklet)
                 .build();
     }
 

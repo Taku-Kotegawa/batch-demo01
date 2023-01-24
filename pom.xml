@@ -15,7 +15,7 @@
     <description>Demo of Spring Batch</description>
     <properties>
         <java.version>8</java.version>
-        <aws.java.sdk.version>2.17.225</aws.java.sdk.version>
+        <aws.java.sdk.version>2.19.22</aws.java.sdk.version>
     </properties>
     <dependencies>
         <dependency>
@@ -124,7 +124,13 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3-transfer-manager</artifactId>
-            <version>${aws.java.sdk.version}-PREVIEW</version><!-- 正式版がリリースされたら修正 -->
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk.crt</groupId>
+            <artifactId>aws-crt</artifactId>
+            <version>0.21.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->

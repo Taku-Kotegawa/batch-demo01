@@ -14,6 +14,13 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
+import software.amazon.awssdk.transfer.s3.S3TransferManager;
+
+import software.amazon.awssdk.transfer.s3.model.FileUpload;
+import software.amazon.awssdk.transfer.s3.model.UploadFileRequest;
+import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener;
+
+import java.nio.file.Paths;
 import java.util.List;
 
 @Lazy
@@ -31,6 +38,9 @@ public class S3TestTasklet implements Tasklet {
     @Autowired
     S3Service s3Service;
 
+    @Autowired
+    S3TransferManager s3TransferManager;
+
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
@@ -40,7 +50,7 @@ public class S3TestTasklet implements Tasklet {
         final String prefix3 = "Users/_IF";
         final String delimiter = "/";
         final String downloadDir = "/home/taku/Downloads/";
-        final String filePath = "/home/taku/Downloads/progit.pdf";
+        final String filePath = "/home/taku/Downloads/20220311-EB-Designing_Event_Driven_Systems.pdf";
 
 
         // アップロード
@@ -72,6 +82,22 @@ public class S3TestTasklet implements Tasklet {
                     s3Service.getObjectToFile(bucketName, s3Object.key(), downloadDir + getFileName(s3Object.key()));
                     s3Service.moveObject(bucketName, s3Object.key(), bucketName, getArchiveKey(s3Object.key()));
                 });
+
+
+        // マルチパートフォームアップロード
+        UploadFileRequest uploadFileRequest = UploadFileRequest.builder()
+                .putObjectRequest(req -> req.bucket(bucketName).key(prefix + getFileName(filePath)))
+                .addTransferListener(LoggingTransferListener.create())
+                .source(Paths.get(filePath))
+                .build();
+
+        FileUpload upload = s3TransferManager.uploadFile(uploadFileRequest);
+        upload.completionFuture().join();
+
+
+        // サービスを使った場合
+        s3Service.uploadObjectTM(s3TransferManager, bucketName, prefix + getFileName(filePath), filePath);
+
 
         return RepeatStatus.FINISHED;
     }

@@ -9,6 +9,8 @@ import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.transfer.s3.*;
+import software.amazon.awssdk.transfer.s3.model.*;
+import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,7 +167,7 @@ public class S3ServiceImpl implements S3Service {
     @Override
     public void uploadObjectTM(S3TransferManager s3TransferManager, String bucketName, String objectKey, String localPath) {
         LocalDateTime startDateTime = LocalDateTime.now();
-        log.info("Upload Start S3://{}/{} to {}", bucketName, objectKey, localPath);
+        log.info("Upload Start S3://{}/{} from {}", bucketName, objectKey, localPath);
 
         UploadRequest uploadRequest = UploadRequest.builder()
                 .putObjectRequest(PutObjectRequest.builder()
@@ -173,6 +175,7 @@ public class S3ServiceImpl implements S3Service {
                         .key(objectKey)
                         .build())
                 .requestBody(AsyncRequestBody.fromFile(Paths.get(localPath)))
+                .addTransferListener(LoggingTransferListener.create())
                 .build();
 
         Upload upload = s3TransferManager.upload(uploadRequest);

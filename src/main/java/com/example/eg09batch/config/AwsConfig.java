@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.core.retry.RetryPolicy;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
+
 
 import java.net.URI;
 
@@ -37,13 +39,20 @@ public class AwsConfig {
 
     @Bean
     S3TransferManager s3TransferManager() {
-        return S3TransferManager.builder()
-                .s3ClientConfiguration(cfg -> cfg.credentialsProvider(credentialsProvider)
-                        .targetThroughputInGbps(20.0)
-                        .minimumPartSizeInBytes(10 * MB))
+
+        S3AsyncClient s3AsyncClient = S3AsyncClient.crtBuilder()
+                .credentialsProvider(credentialsProvider)
+                .targetThroughputInGbps(20.0)
+                .minimumPartSizeInBytes(8 * MB)
                 .build();
+
+        S3TransferManager transferManager =
+                S3TransferManager.builder()
+                        .s3Client(s3AsyncClient)
+                        .build();
+
+        return transferManager;
+
     }
-
-
 
 }
