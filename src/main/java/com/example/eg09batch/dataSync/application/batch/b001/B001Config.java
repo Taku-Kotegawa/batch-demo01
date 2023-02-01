@@ -52,6 +52,9 @@ public class B001Config {
     @Autowired
     WebClientTasklet webClientTasklet;
 
+    @Autowired
+    PostgresCopyInTasklet postgresCopyInTasklet;
+
     @Bean
     public Job job(Step step0, Step step1, Step step2, Step step3, Step step4, Step step5) {
 
@@ -108,8 +111,9 @@ public class B001Config {
     @Bean
     Step step5() {
         return stepBuilderFactory.get("step5")
-                .tasklet(tasklet)
-                .tasklet(s3TestTasklet)
+//                .tasklet(tasklet)
+//                .tasklet(s3TestTasklet)
+                .tasklet(postgresCopyInTasklet)
                 .build();
     }
 
